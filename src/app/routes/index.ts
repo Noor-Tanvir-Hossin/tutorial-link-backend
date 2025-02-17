@@ -1,5 +1,8 @@
 
 import { Router } from "express"
+import { UserRoutes } from "../modules/user/user.route"
+import { bookRoutes } from "../modules/book/book.route"
+import { orderRoutes } from "../modules/order/order.route"
 
 
 
@@ -16,10 +19,13 @@ const moduleRoutes = [
         route: UserRoutes
     },
     {
-        path: '/blogs',
-        route: blogRoutes
+        path: '/api/products',
+        route: bookRoutes
     },
-    
+    {
+        path: '/order',
+        route: orderRoutes
+    },
 
 ]
 

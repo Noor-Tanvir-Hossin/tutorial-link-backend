@@ -13,15 +13,15 @@ app.use(cors())
 
 //application routes
 // app.use('/api',router)
-app.use("/api/products", bookRoutes);
-app.use("/api/orders", orderRoutes);
+//app.use("/api/products", bookRoutes);
+//app.use("/api/orders", orderRoutes);
 
 
 app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!')
   })
 
-  app.use(globalErrorHandler)
+  app.use(globalErrorHandler )
   app.use(notFound)
   
 
