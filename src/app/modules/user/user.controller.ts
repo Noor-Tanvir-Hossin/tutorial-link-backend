@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { userService } from "./user.service";
 import catchAsync from "../../utils/cathchAsync";
 
-const createStudent = catchAsync(async (req, res) => {
+const createUser = catchAsync(async (req, res) => {
     const payload = req.body;
   
     const result = await userService.createStudentIntoDB(payload);
@@ -54,8 +54,6 @@ const blockUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
-
 const updateUser = catchAsync(async (req, res) => {
   const{id}= req.params
   const payload = req.body;
@@ -73,7 +71,7 @@ const updateUser = catchAsync(async (req, res) => {
 
 
   export const userController= {
-    createStudent,
+    createUser,
     getUser,
     getSingleUser,
     updateUser,
