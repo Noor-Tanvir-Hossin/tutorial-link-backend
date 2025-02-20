@@ -4,6 +4,8 @@ import { bookRoutes } from './app/modules/book/book.route';
 import notFound from './app/utils/notFound';
 import globalErrorHandler from './app/utils/globalErrorHandler';
 import { orderRoutes } from './app/modules/order/order.route';
+import router from './app/routes';
+import authRouter from './app/modules/auth/auth.route';
 
 const app = express()
 
@@ -12,9 +14,10 @@ app.use(express.json())
 app.use(cors())
 
 //application routes
-// app.use('/api',router)
-//app.use("/api/products", bookRoutes);
+app.use('/api',router)
+// app.use("/api/products", bookRoutes);
 //app.use("/api/orders", orderRoutes);
+// app.use("/api/auth", authRouter);
 
 
 app.get('/', (req:Request, res:Response) => {

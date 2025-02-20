@@ -1,3 +1,5 @@
+import { USER_ROLE } from "./user.constant";
+
 export type Tuser= {
     name:string;
     email:string;
@@ -7,3 +9,4 @@ export type Tuser= {
 }
 
 
+export type TUserRole = keyof typeof USER_ROLE;

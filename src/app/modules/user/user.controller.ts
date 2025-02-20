@@ -12,7 +12,7 @@ const createStudent = catchAsync(async (req, res) => {
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: 'Student is created succesfully',
+      message: 'User is created succesfully',
       data: result,
     });
   });
@@ -24,7 +24,7 @@ const getUser= catchAsync(async(req,res) =>{
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Students is retreived succesfully',
+    message: 'Users is retreived succesfully',
     data: result,
   });
 })
@@ -36,7 +36,7 @@ const getSingleUser= catchAsync(async(req,res) =>{
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Student is retreived succesfully',
+    message: 'User is retreived succesfully',
     data: result,
   });
 })
@@ -50,10 +50,12 @@ const blockUser = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Student is updated succesfully',
+    message: 'User is updated succesfully',
     data: result,
   });
 });
+
+
 const updateUser = catchAsync(async (req, res) => {
   const{id}= req.params
   const payload = req.body;
@@ -63,7 +65,7 @@ const updateUser = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Student is updated succesfully',
+    message: 'User is updated succesfully',
     data: result,
   });
 });
