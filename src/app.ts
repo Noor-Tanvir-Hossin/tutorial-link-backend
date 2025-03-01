@@ -7,11 +7,14 @@ import { orderRoutes } from './app/modules/order/order.route';
 import router from './app/routes';
 import authRouter from './app/modules/auth/auth.route';
 
+import cookieParser from 'cookie-parser';
+
 const app = express()
 
 
 app.use(express.json())
-app.use(cors())
+app.use(cookieParser())
+app.use(cors({origin : '*', credentials: true}))
 
 //application routes
 app.use('/api',router)

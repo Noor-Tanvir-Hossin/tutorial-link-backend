@@ -17,6 +17,7 @@ const createBook = catchAsync(async(req, res) => {
 })
 
 const getAllBooks = catchAsync(async (req, res) => {
+  
   const result = await bookService.getAllBooksFromDB(req.query);
 
   sendResponse(res, {

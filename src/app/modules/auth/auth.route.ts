@@ -9,6 +9,12 @@ const authRouter = Router();
 authRouter.post('/register', validateRequest(UserValidation.userValidationSchema), AuthControllers.register);
 authRouter.post('/login', validateRequest(AuthValidation.loginValidationSchema), AuthControllers.login);
 
+authRouter.post(
+    '/refresh-token',
+    validateRequest(AuthValidation.refreshTokenValidationSchema),
+    AuthControllers.refreshToken,
+  );
+
 
 
 export default authRouter;

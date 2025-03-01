@@ -9,8 +9,13 @@ const createBook = async (bookData: TBook) => {
 };
 
 const getAllBooksFromDB = async (query: Record<string, unknown>) => {
+  
   const userQuery = new QueryBuilder(Book.find().populate('author'),query)
   .search(bookSearchableFields)
+  .filter()
+  .sort()
+  .paginate()
+  .fields();
 
   const result= await userQuery.modelQuery
   return result;

@@ -25,55 +25,89 @@ class QueryBuilder<T> {
     return this;
   }
 
-//   filter() {
-//     const queryObj = { ...this.query }; // copy
+  filter() {
+    const queryObj = { ...this.query }; // copy
 
-//     // Filtering
-//     const excludeFields = ['searchTerm',
-//     'page',
-//     'limit',
-//     'sortOrder',
-//     'sortBy',
-//     'fields',];
+    // Filtering
+    const excludeFields = [
+      'searchTerm',
+      'page',
+      'limit',
+      'sortOrder',
+      'sortBy',
+      'fields',
+    ];
 
-//      excludeFields.forEach((el) => delete queryObj[el]);
+    excludeFields.forEach((el) => delete queryObj[el]);
 
-//      if (queryObj.filter) {
-//       queryObj.author = queryObj.filter; // Map `filter` to `author`
-//       delete queryObj.filter; // Remove `filter` from the query object
-//     }
-     
+    const filterConditions: Partial<FilterQuery<T>> = {};
 
-//     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
-    
+    if (queryObj.minPrice || queryObj.maxPrice) {
+      (filterConditions as any).price = {};
+      if (queryObj.minPrice) {
+        (filterConditions as any).price.$gte = Number(queryObj.minPrice); // Minimum price
+      }
+      if (queryObj.maxPrice) {
+        (filterConditions as any).price.$lte = Number(queryObj.maxPrice); // Maximum price
+      }
+    }
 
-//     return this;
-//   }
+    if (queryObj.author) {
+      (filterConditions as any).author = queryObj.author;
+    }
 
-//   sort() {
-//     let sortStr;
+    // ✅ Category Filtering
+    if (queryObj.category) {
+      (filterConditions as any).category = queryObj.category;
+    }
 
-//     if (this?.query?.sortBy && this?.query?.sortOrder) {
-//       const sortBy = this?.query?.sortBy
-//       const sortOrder = this?.query?.sortOrder
-//       // "-price" othoba "price"
-//       sortStr = `${sortOrder === 'desc' ? '-' : ''}${sortBy}`
-//     }
+    // ✅ Availability Filtering (true/false)
+    if (queryObj.availability !== undefined) {
+      (filterConditions as any).inStock = queryObj.availability === 'true';
+    }
 
-//     this.modelQuery = this.modelQuery.sort(sortStr)
+    //  if (queryObj.filter) {
+    //   queryObj.author = queryObj.filter; // Map `filter` to `author`
+    //   delete queryObj.filter; // Remove `filter` from the query object
+    // }
 
-//     return this;
-//   }
+    this.modelQuery = this.modelQuery.find(filterConditions);
 
+    return this;
+  }
 
+  sort() {
+    let sortStr;
 
-//   fields() {
-//     const fields =
-//       (this?.query?.fields as string)?.split(',')?.join(' ') || '-__v';
+    if (this?.query?.sortBy && this?.query?.sortOrder) {
+      const sortBy = this?.query?.sortBy;
+      const sortOrder = this?.query?.sortOrder;
+      // "-price" othoba "price"
+      sortStr = `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+    }
 
-//     this.modelQuery = this.modelQuery.select(fields);
-//     return this;
-//   }
+    this.modelQuery = this.modelQuery.sort(sortStr);
+
+    return this;
+  }
+
+  paginate() {
+    const page = Number(this?.query?.page) || 1;
+    const limit = Number(this?.query?.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    this.modelQuery = this.modelQuery.skip(skip).limit(limit);
+
+    return this;
+  }
+
+  fields() {
+    const fields =
+      (this?.query?.fields as string)?.split(',')?.join(' ') || '-__v';
+
+    this.modelQuery = this.modelQuery.select(fields);
+    return this;
+  }
 }
 
 export default QueryBuilder;
