@@ -5,6 +5,11 @@ const bookSchema = new Schema<TBook>(
   {
     title: { type: String, required: true },
     author: { type: String, required: true },
+    image: {
+      type: String,
+      required: [true, "Product image is required"],
+      trim: true,
+    },
     price: { type: Number, required: true, min: 0 },
     category: {
       type: String,

@@ -3,6 +3,7 @@ import { z } from "zod";
 export const bookValidationSchema = z.object({
   title: z.string().min(1, "Title is required"),
   author: z.string().min(1, "Author is required"),
+  image: z.string().min(1, "Book image is required").trim(),
   price: z.number().min(0, "Price must be a positive number"),
   category: z.enum(["Fiction", "Science", "SelfDevelopment", "Poetry", "Religious"]),
   description: z.string().min(10, "Description must be at least 10 characters"),
