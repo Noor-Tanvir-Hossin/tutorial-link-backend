@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import AppError from "../error/AppError";
-import { TUserRole, Tuser } from "../modules/user/user.interface";
+import { TUserRole } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
 import catchAsync from "../utils/cathchAsync";
 import jwt, { JwtPayload } from 'jsonwebtoken';

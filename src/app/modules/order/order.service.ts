@@ -1,11 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
 import AppError from '../../error/AppError';
-import { TOrder } from './order.interface';
 import { Order } from './order.model';
 import { Book } from '../book/book.model';
 import { Tuser } from '../user/user.interface';
 import { orderUtils } from './order.utils';
-import mongoose from 'mongoose';
 
 // export const createOrderIntoDB = async (orderData: TOrder) => {
 //     const product = await Book.findById(orderData.product);

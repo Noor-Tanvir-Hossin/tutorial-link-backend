@@ -1,5 +1,3 @@
-import { Request, Response } from "express";
-import { bookValidationSchema } from "./book.validation";
 import { bookService } from "./book.service";
 import catchAsync from "../../utils/cathchAsync";
 import sendResponse from "../../utils/sendResponse";
@@ -31,8 +29,6 @@ const getAllBooks = catchAsync(async (req, res) => {
 const getSingleBook= catchAsync(async(req,res) =>{
 
   const {productId}= req.params
-  console.log(productId);
-
   const result = await bookService.getSingleBookfromDB(productId)
 
   sendResponse(res, {
