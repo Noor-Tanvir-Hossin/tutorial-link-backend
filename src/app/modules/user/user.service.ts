@@ -30,6 +30,26 @@ const createStudentIntoDB = async (payload: Tuser): Promise<Tuser> => {
     })
     return result
   }
+
+  const updateUserRoleFromDB = async (id: string, role: "admin" | "user") => {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { role },
+      { new: true }
+    );
+    if (!updatedUser) throw new Error("User not found");
+    return updatedUser;
+  };
+
+  const updateUserStatusFromDB = async (id: string, isActive: boolean) => {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { isActive },
+      { new: true }
+    );
+    if (!updatedUser) throw new Error("User not found");
+    return updatedUser;
+  };
   
 //   const deleteUser = async (id: string) => {
 //     const result = await User.findByIdAndDelete(id)
@@ -41,6 +61,8 @@ const createStudentIntoDB = async (payload: Tuser): Promise<Tuser> => {
     getUserFromDB,
     getSingleUserFromDB,
     updateUserIntoDB,
-    blockUserFromDB
+    blockUserFromDB,
+    updateUserRoleFromDB,
+    updateUserStatusFromDB
     // deleteUser,
   }

@@ -22,18 +22,25 @@ const getAllBooksFromDB = async (query: Record<string, unknown>) => {
 };
 
 
-const getSingleBookfromDB = async (id: string) => {
-  const result= await Book.findOne({id});
+const getSingleBookfromDB = async (_id: string) => {
+  const result= await Book.findOne({_id});
   return result
 };
 
-const updateBookIntoDB = async (id: string, updateData: Partial<TBook>) => {
-  const result= await Book.findOneAndUpdate ({id}, updateData, { new: true });
-  return result
+const updateBookIntoDB = async (
+  productID: string,
+  productInfo: TBook
+) => {
+  const result = await Book.findByIdAndUpdate(productID, productInfo, {
+    new: true,
+  });
+  return result;
 };
 
-const deleteBookFromDB = async (id: string) => {
-  return await Book.findOneAndDelete({id});
+const deleteBookFromDB = async (_id: string) => {
+  console.log(_id);
+  
+  return await Book.findOneAndDelete({_id});
 };
 
 export const bookService = {

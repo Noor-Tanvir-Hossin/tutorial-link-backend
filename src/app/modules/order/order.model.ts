@@ -5,7 +5,7 @@ const orderSchema = new Schema<TOrder>(
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "User",
         required: true,
       },
       // email: { type: String, required: true },
@@ -16,7 +16,7 @@ const orderSchema = new Schema<TOrder>(
         {
           product: {
             type: Schema.Types.ObjectId,
-            ref: "Product",
+            ref: "Book",
             required: true,
           },
           quantity: {
@@ -26,6 +26,9 @@ const orderSchema = new Schema<TOrder>(
         },
       ],
       totalPrice: { type: Number, required: true, min: 0 },
+      totalRevenue : {
+        type: Number,
+    },
       status: {
         type: String,
         enum: ["Pending", "Paid", "Shipped", "Completed", "Cancelled"],

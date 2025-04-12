@@ -5,6 +5,8 @@ export type Tuser= {
     email:string;
     password: string;
     role?: "admin" | "user" ;
+    isActive: boolean;
+    passwordChangeAt: Date;
     
 }
 

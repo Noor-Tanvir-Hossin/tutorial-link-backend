@@ -24,7 +24,7 @@ const moduleRoutes = [
         route: bookRoutes
     },
     {
-        path: '/order',
+        path: '/orders',
         route: orderRoutes
     },
     {

@@ -24,6 +24,7 @@ export type TOrder = {
     date_time: string;
   };
   totalPrice: number;
+  totalRevenue: number;
   status: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled";
   createdAt?: Date;
   updatedAt?: Date;

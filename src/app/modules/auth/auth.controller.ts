@@ -3,6 +3,7 @@ import sendResponse from "../../utils/sendResponse";
 import catchAsync from "../../utils/cathchAsync";
 import { AuthService } from "./auth.service";
 import config from "../../config";
+import { Tuser } from "../user/user.interface";
 
 const register = catchAsync(async(req, res)=>{
     const result = await AuthService.register(req.body);
@@ -46,11 +47,24 @@ const refreshToken = catchAsync(async (req, res) => {
     });
   });
 
+const changePassword = catchAsync(async(req ,res)=>{
+
+    const user = req.user as Tuser;
+   
+    const result = await AuthService.changePasswordIntoDB(user , req.body)
+    sendResponse(res , {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Password Updated successfully',
+      data : result,
+    })
+  })
 
 
 
 export const AuthControllers = {
     register,
     login,
-    refreshToken
+    refreshToken,
+    changePassword
 }

@@ -19,12 +19,19 @@ const userSchema = new Schema<Tuser>({
         required: true,
         select:0
     },
+    passwordChangeAt: {
+        type: Date,
+      },
     
     role:{
         type: String,
         enum: ['admin','user'],
         default:'user'
     },
+    isActive:{
+        type: Boolean,
+        default: true,
+      }
     
        
 },

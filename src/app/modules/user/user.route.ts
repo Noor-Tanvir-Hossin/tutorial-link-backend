@@ -14,5 +14,20 @@ router.get('/:id', userController.getSingleUser);
 router.patch('/:id', validateRequest(UserValidation.updateUserValidationSchema) ,userController.updateUser);
 router.patch('/:id',  validateRequest(UserValidation.updateUserValidationSchema) ,userController.blockUser);
 
+router.patch(
+    '/:id/role',
+    auth(USER_ROLE.admin),
+    validateRequest(UserValidation.updateUserRoleValidation),
+    userController.updateUserRole
+  );
+
+router.patch(
+    '/:id/status',
+    auth(USER_ROLE.admin),
+    validateRequest(UserValidation.updateUserStatusValidation),
+    userController.updateUserStatus
+  );
+
+
 
 export const UserRoutes = router;

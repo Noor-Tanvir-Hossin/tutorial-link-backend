@@ -30,8 +30,10 @@ const getAllBooks = catchAsync(async (req, res) => {
 
 const getSingleBook= catchAsync(async(req,res) =>{
 
-  const {id}= req.params
-  const result = await bookService.getSingleBookfromDB(id)
+  const {productId}= req.params
+  console.log(productId);
+
+  const result = await bookService.getSingleBookfromDB(productId)
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -42,10 +44,15 @@ const getSingleBook= catchAsync(async(req,res) =>{
 })
 
 const updateBook = catchAsync(async (req, res) => {
-  const{id}= req.params
-  const payload = req.body;
+  const { productId } = req.params;
+    // Extract product data from the request body
+    const productInfo = req.body;
+    // Update the product in the database based on the provided ID and data
+    const result = await bookService.updateBookIntoDB(
+      productId,
+      productInfo
+    );
 
-  const result = await bookService.updateBookIntoDB(id,payload);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -57,14 +64,16 @@ const updateBook = catchAsync(async (req, res) => {
 
 const deleteBook = catchAsync(async(req,res) =>{
 
-  const {id}= req.params
-  const result = await bookService.deleteBookFromDB(id)
+  const {productId}= req.params
+  // console.log(productId);
+  
+  const result = await bookService.deleteBookFromDB(productId)
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Book deleted successfully',
-    data: {},
+    data: result,
   });
 })
 

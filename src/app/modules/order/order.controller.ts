@@ -31,6 +31,19 @@ const creatrOrder = catchAsync(async (req, res) => {
     });
   });
 
+  const getSingleOrder = catchAsync(async (req, res) => {
+    const {orderId} = req.params;
+    
+    const order = await orderService.getSingleOrderFromDB(orderId);
+  
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Order retrieved successfully",
+      data: order,
+    });
+  });
+
   const verifyPayment = catchAsync(async (req, res) => {
     const order = await orderService.verifyPayment(req.query.order_id as string);
   
@@ -45,7 +58,7 @@ const creatrOrder = catchAsync(async (req, res) => {
 const calculateRevenue = catchAsync(async (req, res) => {
     // const payload = req.body;
   
-    const result = await orderService.calculateRevenueFromDB();
+    const result = await orderService.calculateTotalRevenueFromDB();
   
     sendResponse(res, {
       statusCode: StatusCodes.OK,
@@ -55,9 +68,48 @@ const calculateRevenue = catchAsync(async (req, res) => {
     });
   });
 
+  const getOrdersByEmail = catchAsync(async (req , res)=> {
+    const {email} = req.params;
+    const orders = await orderService.getOrdersByEmailFromDB(email as string);
+  
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Orders retrieved successfully",
+      data: orders,
+    });
+  })
+
+  const deleteOrder = catchAsync(async(req , res) => {
+    const {id} = req.params;
+   const result = await orderService.deleteOrderFromDB(id as string);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Order deleted successfully",
+      data: result,
+    });
+  })
+
+  const updateOrderStatus = catchAsync(async(req, res) => {
+    const {id} = req.params;
+    const {status} = req.body;
+    const result = await orderService.updateOrderStatusFromDB(id as string, status as string);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Order status updated successfully",
+      data: result,
+    });
+  })
+
   export const orderController = {
     creatrOrder,
+    getSingleOrder,
     calculateRevenue,
     getOrders,
-    verifyPayment
+    verifyPayment,
+    getOrdersByEmail,
+    deleteOrder,
+    updateOrderStatus 
   }

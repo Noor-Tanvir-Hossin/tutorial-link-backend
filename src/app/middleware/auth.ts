@@ -22,7 +22,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       ) as JwtPayload ;
   
   
-      const { role , email, iat} = decoded ;
+      const { role , email} = decoded ;
   
       // checking if the user is exist
     const user = await User.findOne({ email });
@@ -44,6 +44,12 @@ const auth = (...requiredRoles: TUserRole[]) => {
           'You are not authorized'
         );
       }
+
+      const { iat } = decoded;
+      const passwordChangedTime = new Date(user?.passwordChangeAt).getTime() / 1000;
+    if (passwordChangedTime > iat!) {
+      throw new AppError(StatusCodes.UNAUTHORIZED, 'user token not valid');
+    }
       
   
       // req.user = decoded as JwtPayload uu;

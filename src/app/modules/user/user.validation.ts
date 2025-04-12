@@ -15,7 +15,7 @@ const userValidationSchema = z.object({
       required_error: 'Password is required for your safety',
     })
     .max(20, { message: 'Password can not be more than 20 characters' }),
-
+    isActive: z.boolean().optional(),
     
    })
 })
@@ -43,12 +43,31 @@ const updateUserValidationSchema = z.object({
         })
         .max(20, { message: "Password can not be more than 20 characters" })
         .optional(),
+        
+    }),
+  });
+
+  const updateUserRoleValidation = z.object({
+    body: z.object({
+      role: z.enum(["admin", "user"], {
+        required_error: "Role is required",
+      }),
+    }),
+  });
+
+  const updateUserStatusValidation = z.object({
+    body: z.object({
+      isActive: z.boolean({
+        required_error: "Status is required",
+      }),
     }),
   });
 
 export const UserValidation = {
     userValidationSchema,
-    updateUserValidationSchema
+    updateUserValidationSchema,
+    updateUserRoleValidation,
+    updateUserStatusValidation
 }
 
 /* name: string – The full name of the user.

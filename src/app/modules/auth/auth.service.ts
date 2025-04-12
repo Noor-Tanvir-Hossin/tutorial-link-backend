@@ -89,8 +89,42 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const changePasswordIntoDB = async (
+  user: { email: string; role: string }, 
+  payload:  { oldPassword: string; newPassword: string },
+) => {
+  const { email } = user;
+  const userData = await User.findOne({email}).select("+password"); 
+
+  if (!userData) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
+  }
+
+  if (!userData.isActive) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'User is blocked');
+  }
+  const isValidPassword = await bcrypt.compare(payload.oldPassword, userData.password);
+  if (!isValidPassword) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'Invalid password');
+  }
+
+  const newPasswordHash = await bcrypt.hash(payload.newPassword, 10);
+
+  await User.findByIdAndUpdate(
+    userData?._id,
+    {
+      password: newPasswordHash,
+      needsPasswordChange: false,
+      passwordChangeAt: new Date(),
+    },
+    { new: true },
+  );
+  return null;
+};
+
 export const AuthService = {
   register,
   login,
-  refreshToken
+  refreshToken,
+  changePasswordIntoDB
 };
