@@ -4,7 +4,7 @@ import app from "./app";
 import config from "./app/config";
 
 
-let server: Server;
+// let server: Server;
 
 
 async function main() {
@@ -15,25 +15,25 @@ async function main() {
         })
   
     } catch (error) {
-        console.log(error);
-  
+        console.log("Database connection failed",error);
+        process.exit(1);  
     }
   
   }
   main()
 
 
-  process.on('unhandledRejection', () => {
-    console.log(`😈 unahandledRejection is detected , shutting down ...`);
-    if (server) {
-      server.close(() => {
-        process.exit(1);
-      });
-    }
-    process.exit(1);
-  });
+  // process.on('unhandledRejection', () => {
+  //   console.log(`😈 unahandledRejection is detected , shutting down ...`);
+  //   if (server) {
+  //     server.close(() => {
+  //       process.exit(1);
+  //     });
+  //   }
+  //   process.exit(1);
+  // });
   
-  process.on('uncaughtException', () => {
-    console.log(`😈 uncaughtException is detected , shutting down ...`);
-    process.exit(1);
-  });
+  // process.on('uncaughtException', () => {
+  //   console.log(`😈 uncaughtException is detected , shutting down ...`);
+  //   process.exit(1);
+  // });

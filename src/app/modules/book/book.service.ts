@@ -38,7 +38,7 @@ const updateBookIntoDB = async (
 };
 
 const deleteBookFromDB = async (_id: string) => {
-  console.log(_id);
+
   
   return await Book.findOneAndDelete({_id});
 };
