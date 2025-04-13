@@ -3,7 +3,6 @@ import sendResponse from "../../utils/sendResponse";
 import catchAsync from "../../utils/cathchAsync";
 import { AuthService } from "./auth.service";
 import config from "../../config";
-import { Tuser } from "../user/user.interface";
 
 
 const register = catchAsync(async(req, res)=>{
@@ -50,9 +49,7 @@ const refreshToken = catchAsync(async (req, res) => {
 
 const changePassword = catchAsync(async(req ,res)=>{
 
-    const user =req.user as { email: string; role: string };;
-   
-   
+    const user =req.user as { email: string; role: string };
     const result = await AuthService.changePasswordIntoDB(user , req.body)
     sendResponse(res , {
       success: true,

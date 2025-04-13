@@ -40,6 +40,17 @@ const getSingleUser= catchAsync(async(req,res) =>{
   });
 })
 
+const getUserByEmail = catchAsync(async(req , res)=> {
+  const { email } = req.params;
+  const result = await userService.getUserByEmailFromDB(email);
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "User by email retrieved successfully",
+    data: result,
+  })
+})
+
 const blockUser = catchAsync(async (req, res) => {
   const{id}= req.params
   const payload = req.body;
@@ -99,6 +110,7 @@ const updateUserStatus = catchAsync(async (req, res) => {
   export const userController= {
     createUser,
     getUser,
+    getUserByEmail,
     getSingleUser,
     updateUser,
     updateUserRole,

@@ -13,6 +13,7 @@ router.get('/', auth(USER_ROLE.admin, USER_ROLE.user), userController.getUser);
 router.get('/:id', userController.getSingleUser);
 router.patch('/:id', validateRequest(UserValidation.updateUserValidationSchema) ,userController.updateUser);
 router.patch('/:id',  validateRequest(UserValidation.updateUserValidationSchema) ,userController.blockUser);
+router.get('/email/:email', auth(USER_ROLE.user , USER_ROLE.admin),  userController.getUserByEmail)
 
 router.patch(
     '/:id/role',

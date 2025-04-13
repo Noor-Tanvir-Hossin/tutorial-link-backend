@@ -17,6 +17,11 @@ const createStudentIntoDB = async (payload: Tuser): Promise<Tuser> => {
     const result = await User.findById(id)
     return result
   }
+
+  const getUserByEmailFromDB = async (email : string) => {
+    const result = await User.findOne({email})
+    return result;
+}
   
   const updateUserIntoDB = async (id: string, data: Tuser) => {
     const result = await User.findByIdAndUpdate(id, data, {
@@ -60,6 +65,7 @@ const createStudentIntoDB = async (payload: Tuser): Promise<Tuser> => {
     createStudentIntoDB,
     getUserFromDB,
     getSingleUserFromDB,
+    getUserByEmailFromDB,
     updateUserIntoDB,
     blockUserFromDB,
     updateUserRoleFromDB,

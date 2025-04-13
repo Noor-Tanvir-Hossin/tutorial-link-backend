@@ -1,5 +1,5 @@
 declare module "shurjopay" {
-    // import { Logger } from "winston";
+    import { Logger } from "winston";
   
     interface Credentials {
       root_url: string;
@@ -99,6 +99,7 @@ declare module "shurjopay" {
     }
   
     type Callback<T> = (response: T) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     type ErrorHandler = (error: any) => void;
   
     class Shurjopay {
