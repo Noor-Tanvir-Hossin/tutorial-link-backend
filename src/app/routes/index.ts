@@ -4,6 +4,10 @@ import { UserRoutes } from "../modules/user/user.route"
 import { bookRoutes } from "../modules/book/book.route"
 import { orderRoutes } from "../modules/order/order.route"
 import authRouter from "../modules/auth/auth.route"
+import { TutorRoutes } from "../modules/tutor/tutor.route"
+import { ReviewRoutes } from "../modules/review/review.route"
+import { SubjectRoutes } from "../modules/subject/subject.route"
+import { BookingRoutes } from "../modules/booking/booking.route"
 
 
 
@@ -30,6 +34,22 @@ const moduleRoutes = [
     {
         path: '/auth',
         route: authRouter
+    },
+    {
+        path: '/tutor',
+        route: TutorRoutes
+    },
+    {
+        path: '/review',
+        route: ReviewRoutes
+    },
+    {
+        path: '/subject',
+        route: SubjectRoutes
+    },
+    {
+        path: '/booking',
+        route: BookingRoutes
     },
 
 ]

@@ -6,19 +6,19 @@ const router = express.Router();
 
 
 
-router.post("/", auth(USER_ROLE.user,USER_ROLE.admin), orderController.creatrOrder);
+router.post("/", auth(USER_ROLE.tutor,USER_ROLE.student,USER_ROLE.admin), orderController.creatrOrder);
 router.get("/revenue", orderController.calculateRevenue);
-router.get('/verify', auth(USER_ROLE.user), orderController.verifyPayment)
+router.get('/verify', auth(USER_ROLE.tutor,USER_ROLE.student,USER_ROLE.admin), orderController.verifyPayment)
 
 // Route to get all orders
 router.get("/", orderController.getOrders);
 // router.get('/', auth(USER_ROLE.admin), orderController.getOrders)
 router.get('/:orderId', orderController.getSingleOrder)
-router.get('/email/:email', auth(USER_ROLE.user, USER_ROLE.admin), orderController.getOrdersByEmail);
+router.get('/email/:email', auth(USER_ROLE.tutor,USER_ROLE.student,USER_ROLE.admin), orderController.getOrdersByEmail);
 
 
-router.delete('/:id', auth(USER_ROLE.admin), orderController.deleteOrder)
-router.patch('/:id/status', auth(USER_ROLE.admin), orderController.updateOrderStatus);
+router.delete('/:id', auth(USER_ROLE.tutor,USER_ROLE.student,USER_ROLE.admin), orderController.deleteOrder)
+router.patch('/:id/status', auth(USER_ROLE.tutor,USER_ROLE.student,USER_ROLE.admin), orderController.updateOrderStatus);
 
 
 

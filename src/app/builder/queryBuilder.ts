@@ -26,9 +26,8 @@ class QueryBuilder<T> {
   }
 
   filter() {
-    const queryObj = { ...this.query }; // copy
+    const queryObj = { ...this.query };
 
-    // Filtering
     const excludeFields = [
       'searchTerm',
       'page',
@@ -42,34 +41,44 @@ class QueryBuilder<T> {
 
     const filterConditions: Partial<FilterQuery<T>> = {};
 
-    if (queryObj.minPrice || queryObj.maxPrice) {
-      (filterConditions as any).price = {};
-      if (queryObj.minPrice) {
-        (filterConditions as any).price.$gte = Number(queryObj.minPrice); // Minimum price
+    // Hourly rate filter (minHourlyRate & maxHourlyRate)
+    if (queryObj.minHourlyRate || queryObj.maxHourlyRate) {
+      (filterConditions as any).hourlyRate = {};
+      if (queryObj.minHourlyRate) {
+        (filterConditions as any).hourlyRate.$gte = Number(queryObj.minHourlyRate);
       }
-      if (queryObj.maxPrice) {
-        (filterConditions as any).price.$lte = Number(queryObj.maxPrice); // Maximum price
+      if (queryObj.maxHourlyRate) {
+        (filterConditions as any).hourlyRate.$lte = Number(queryObj.maxHourlyRate);
       }
     }
 
-    if (queryObj.author) {
-      (filterConditions as any).author = queryObj.author;
+    // Subject filter (by subject name)
+    if (queryObj.subject) {
+      (filterConditions as any).subjects = {
+        $regex: queryObj.subject,
+        $options: 'i',
+      };
     }
 
-    // ✅ Category Filtering
-    if (queryObj.category) {
-      (filterConditions as any).category = queryObj.category;
+    // Location filter
+    if (queryObj.location) {
+      (filterConditions as any).location = {
+        $regex: queryObj.location,
+        $options: 'i',
+      };
     }
 
-    // ✅ Availability Filtering (true/false)
-    if (queryObj.availability !== undefined) {
-      (filterConditions as any).inStock = queryObj.availability === 'true';
+    // Rating filter (minRating)
+    if (queryObj.minRating) {
+      (filterConditions as any).ratings = {
+        $gte: Number(queryObj.minRating),
+      };
     }
 
-    //  if (queryObj.filter) {
-    //   queryObj.author = queryObj.filter; // Map `filter` to `author`
-    //   delete queryObj.filter; // Remove `filter` from the query object
-    // }
+    // Availability filter by day (e.g., availabilityDay=Sunday)
+    if (queryObj.availabilityDay) {
+      (filterConditions as any)['availability.day'] = queryObj.availabilityDay;
+    }
 
     this.modelQuery = this.modelQuery.find(filterConditions);
 
@@ -82,8 +91,10 @@ class QueryBuilder<T> {
     if (this?.query?.sortBy && this?.query?.sortOrder) {
       const sortBy = this?.query?.sortBy;
       const sortOrder = this?.query?.sortOrder;
-      // "-price" othoba "price"
       sortStr = `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+    } else {
+      // Default sorting by relevance (or newest if needed)
+      sortStr = '-createdAt';
     }
 
     this.modelQuery = this.modelQuery.sort(sortStr);
@@ -109,5 +120,7 @@ class QueryBuilder<T> {
     return this;
   }
 }
+
+export const tutorSearchableFields = ['name', 'subjects', 'location', 'bio'];
 
 export default QueryBuilder;

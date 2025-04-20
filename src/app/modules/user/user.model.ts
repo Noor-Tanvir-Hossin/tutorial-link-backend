@@ -19,20 +19,19 @@ const userSchema = new Schema<Tuser>({
         required: true,
         select:0
     },
+    image:{
+        type:String,
+        required:true
+    },
     passwordChangeAt: {
         type: Date,
       },
     
     role:{
         type: String,
-        enum: ['admin','user'],
-        default:'user'
-    },
-    isActive:{
-        type: Boolean,
-        default: true,
-      }
-    
+        enum: ['tutor','student'],
+        default:'student'
+    },  
        
 },
     {
@@ -48,20 +47,6 @@ userSchema.pre('save', async function(next){
     next()
   
   })
-//   userSchema.post('save', function(doc, next){
-
-//     doc.password="";
-//     // console.log('we saved our data');
-  
-//     next()
-//   })
 
   export const User= model<Tuser>('User', userSchema)
 
-/* name: string – The full name of the user.
-email: string – The email address of the user, used for authentication and communication.
-password: string – The password for the user, securely stored.
-role: "admin" | "user" – The role of the user, determining their access level. Default is "user".
-isBlocked: boolean – A flag indicating whether the user is blocked or not. Default is false.
-createdAt: Date – The timestamp when the user was created.
-updatedAt: Date – The timestamp of the last update to the user. */
