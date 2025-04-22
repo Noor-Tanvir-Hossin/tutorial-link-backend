@@ -29,7 +29,7 @@ const login = async (payload: { email: string; password: string }) => {
   );
 
   if (!isPasswordMatched) {
-    throw new Error('Wrong Password!!! Tell me who are you? 😈');
+    throw new Error('Your password is not valid!');
   }
 
   //create token and sent to the  client
@@ -100,9 +100,9 @@ const changePasswordIntoDB = async (
     throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
   }
 
-  if (!userData.isActive) {
-    throw new AppError(StatusCodes.FORBIDDEN, 'User is blocked');
-  }
+  // if (!userData.isActive) {
+  //   throw new AppError(StatusCodes.FORBIDDEN, 'User is blocked');
+  // }
   const isValidPassword = await bcrypt.compare(payload.oldPassword, userData.password);
   if (!isValidPassword) {
     throw new AppError(StatusCodes.FORBIDDEN, 'Invalid password');

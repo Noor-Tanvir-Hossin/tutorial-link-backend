@@ -15,8 +15,9 @@ const availabilitySchema = new Schema({
 const tutorSchema = new Schema<ITutor>({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     bio: { type: String },
+    email: { type: String, required: true },
     subjects: [{ type: Schema.Types.ObjectId, ref: 'Subject' }],
-    hourlyRate: { type: Number },
+    hourlyRate: { type: Number,required:true },
     totalEarnings: { type: Number,default:0 },
     availability: [availabilitySchema],
     ratings: { type: Number, default: 0 },

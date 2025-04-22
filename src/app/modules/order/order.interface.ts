@@ -1,17 +1,8 @@
 import mongoose from 'mongoose';
 
-// export type TOrder = {
-//     email: string;
-//     product: mongoose.Types.ObjectId;
-//     quantity: number;
-//     totalPrice: number;
-//   }
 export type TOrder = {
-  user: mongoose.Types.ObjectId;
+  student: mongoose.Types.ObjectId;
   tutor: mongoose.Types.ObjectId;
-  // email: string;
-  
-
   transaction: {
     id: string;
     transactionStatus: string;
@@ -23,9 +14,10 @@ export type TOrder = {
   };
   totalPrice: number;
   totalRevenue: number;
+  totalHours:number;
   selectedMonths: number;  
   selectedHours: number
-  status: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled";
+  status: "Pending" | "Paid" | "Cancelled";
   createdAt?: Date;
   updatedAt?: Date;
 };

@@ -1,72 +1,57 @@
 import { StatusCodes } from 'http-status-codes';
 import AppError from '../../error/AppError';
 import { Order } from './order.model';
-import { Book } from '../book/book.model';
+// import { Book } from '../book/book.model';
 import { Tuser } from '../user/user.interface';
 import { orderUtils } from './order.utils';
+import { Tutor } from '../tutor/tutor.model';
+import { TOrder } from './order.interface';
 
-// export const createOrderIntoDB = async (orderData: TOrder) => {
-//     const product = await Book.findById(orderData.product);
-//     if (!product) throw new AppError( StatusCodes.BAD_REQUEST,"Product not found" );
 
-//     if (product.quantity < orderData.quantity) {
-//       throw new AppError(StatusCodes.BAD_REQUEST,"Insufficient stock");
-//     }
-
-//     // Reduce stock quantity
-//     product.quantity -= orderData.quantity;
-//     product.inStock = product.quantity > 0;
-//     await product.save();
-
-//     const order = await Order.create(orderData);
-//     return order;
-//   };
-// orderData: TOrder,
 
 export const createOrderIntoDB = async (
   user: Tuser,
-  payload: { products: { product: string; quantity: number }[] },
+  payload: TOrder,
   client_ip: string,
 ) => {
-  // const product = await Book.findById(orderData.product);
-  // if (!product) throw new AppError( StatusCodes.BAD_REQUEST,"Product not found" );
+  
+  
 
-  // if (product.quantity < orderData.quantity) {
-  //   throw new AppError(StatusCodes.BAD_REQUEST,"Insufficient stock");
-  // }
+  const tutors = await Tutor.findById(payload.tutor);
+  // console.log(tutors?.availability.length)
+  const daysInAWeek=tutors?.availability.length
+    if (!tutors) {
+      throw new Error("Tutor not found");
+    }
 
-  // // Reduce stock quantity
-  // product.quantity -= orderData.quantity;
-  // product.inStock = product.quantity > 0;
-  // await product.save();
+    const { selectedMonths, selectedHours, student,tutor } = payload;
 
-  // const order = await Order.create(orderData);
-  // const session = await mongoose.startSession();
-  if (!payload?.products?.length)
-    throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'Order is not specified');
+    if (!tutor || !student || !selectedHours || !selectedMonths) {
+      throw new AppError(StatusCodes.BAD_REQUEST, 'Missing required fields: tutorId, studentId, selectedHours, selectedMonths');
+      
+    }
+  
 
-  const products = payload.products;
-  let totalPrice = 0;
+    const totalHours = selectedHours * 4 * selectedMonths*daysInAWeek!;
 
-  const productDetails = await Promise.all(
-    products.map(async (item) => {
-      const product = await Book.findById(item.product);
-      if (product) {
-        const subtotal = product ? (product.price || 0) * item.quantity : 0;
-        totalPrice += subtotal;
-        return item;
-      }
-    }),
-  );
+    // calculating total prices for the student
+    const totalPrices = tutors.hourlyRate * totalHours;
+
 
   let order = await Order.create({
-    user,
-    products: productDetails,
-    totalPrice,
+    student,
+    tutor,
+    totalPrice:totalPrices,
+    totalHours,
+    selectedMonths,
+    selectedHours,
+    
   });
 
+ 
+
   const shurjopayPayload = {
-    amount: totalPrice,
+    amount: totalPrices,
     order_id: order._id,
     currency: 'BDT',
     customer_name: user.name,
@@ -93,14 +78,14 @@ export const createOrderIntoDB = async (
 };
 
 const getOrdersFromDB = async () => {
-  const data = await Order.find().populate('user').populate('products.product');
+  const data = await Order.find().populate('student').populate('tutor');
   return data;
 };
 
 const getSingleOrderFromDB = async (orderId: string) => {
   const data = await Order.findById(orderId)
-    .populate('user')
-    .populate('products.product');
+    .populate('student')
+    .populate('tutor');
 
   return data;
 };
@@ -135,22 +120,7 @@ const verifyPayment = async (order_id: string) => {
   return verifiedPayment;
 };
 
-const calculateTotalRevenueFromDB = async () => {
-  // Use MongoDB's aggregation pipeline to calculate total revenue
-  const result = await Order.aggregate([
-    {
-      $group: {
-        _id: null,
-        totalRevenue: {
-          $sum: {
-            $multiply: ['$totalPrice', '$quantity'],
-          },
-        },
-      },
-    },
-  ]);
-  return result[0].totalRevenue;
-};
+
 
 const deleteOrderFromDB = async (id: string) => {
   const order = await Order.findById(id);
@@ -161,51 +131,74 @@ const deleteOrderFromDB = async (id: string) => {
   return result;
 };
 
-const updateOrderStatusFromDB = async (orderId: string, status: string) => {
-  const result = await Order.findByIdAndUpdate(
-    orderId,
-    { status },
-    { new: true },
-  );
-  return result;
-};
-// const getOrdersByEmailFromDB = async (email: string) => {
-//   const result = await Order.find({ email }).populate('products.product');
-//   return result;
-// };
 
-const getOrdersByEmailFromDB = async (email: string) => {
-  const result = await Order.aggregate([
-    {
-      $lookup: {
-        from: 'users', // collection name in MongoDB (usually lowercase plural)
-        localField: 'user',
-        foreignField: '_id',
-        as: 'user',
-      },
-    },
-    { $unwind: '$user' }, // convert user array to object
-    { $match: { 'user.email': email } }, // filter by user's email
-    {
-      $lookup: {
-        from: 'books', // your products are books
-        localField: 'products.product',
-        foreignField: '_id',
-        as: 'populatedProducts',
-      },
-    },
-  ]);
 
-  return result;
+const updateOrderStatusFromDB= async (orderId: string) => {
+  // Find the order by ID
+  const order = await Order.findById(orderId);
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  // Calculate total revenue for the tutor (could be the same as the total price or include fees)
+  const totalRevenue = order.totalPrice;
+
+  // Update the tutor's earnings (This could be added to a 'tutorEarnings' field in the tutor model)
+  const tutor = await Tutor.findById(order.tutor); // Assuming order refers to a tutor
+  if (tutor) {
+    tutor.totalEarnings! += totalRevenue; // Increment tutor earnings by the total amount
+    await tutor.save();
+  }
+
+  // Update the order to mark it as paid
+  order.status = "Paid";
+  await order.save();
+
+  return order;
+}
+
+
+const getOrdersByStudentEmailFromDb = async (email: string) => {
+  const orders = await Order.find()
+    .populate({
+      path: 'student',
+      match: { email },
+    })
+    .populate('tutor') // Optionally populate tutor too
+    .exec();
+
+  // Filter out nulls (populate didn't match)
+  const filteredOrders = orders.filter(order => order.student !== null);
+
+  return filteredOrders;
 };
+
+export const getOrdersByTutorEmailFromDb = async (email: string) => {
+  const orders = await Order.find()
+    .populate({
+      path: 'tutor',
+      match: { email },
+    })
+    .populate('student') // Optionally populate student too
+    .exec();
+
+  // Filter out nulls
+  const filteredOrders = orders.filter(order => order.tutor !== null);
+
+  return filteredOrders;
+};
+
+
+
+
 
 export const orderService = {
   createOrderIntoDB,
-  calculateTotalRevenueFromDB,
   getOrdersFromDB,
   verifyPayment,
   deleteOrderFromDB,
   updateOrderStatusFromDB,
-  getOrdersByEmailFromDB,
+  getOrdersByStudentEmailFromDb,
   getSingleOrderFromDB,
+  getOrdersByTutorEmailFromDb
 };

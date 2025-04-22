@@ -14,6 +14,7 @@ export interface ITutor {
     totalEarnings?:number
     availability: IAvailabilitySlot[] // like ['Mon 4PM-6PM']
     ratings: number,
-    location:string
+    location:string,
+    email:string
   }
   

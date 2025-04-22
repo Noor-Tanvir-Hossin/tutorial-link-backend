@@ -3,11 +3,11 @@ import { TOrder } from './order.interface';
 
 const orderSchema = new Schema<TOrder>(
   {
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    student: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     tutor: {
       type: Schema.Types.ObjectId,
-      ref: 'Tutor', // Now referencing the Tutor model, as tutor is the service
-      required: true, // The tutor providing the service
+      ref: 'Tutor', 
+      required: true, 
     },
     selectedMonths: {
       type: Number,
@@ -20,11 +20,12 @@ const orderSchema = new Schema<TOrder>(
       min: 1, // At least 1 hour
     },
 
-    totalPrice: { type: Number, required: true, min: 0 },
-    totalRevenue: { type: Number },
+    totalPrice: { type: Number, min: 0 },
+    totalRevenue: { type: Number,min:0 },
+    totalHours: { type: Number,min:0 },
     status: {
       type: String,
-      enum: ['Pending', 'Paid', 'Shipped', 'Completed', 'Cancelled'],
+      enum: ['Pending', 'Paid', 'Cancelled'],
       default: 'Pending',
     },
     transaction: {
