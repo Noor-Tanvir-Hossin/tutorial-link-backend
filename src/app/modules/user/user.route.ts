@@ -10,7 +10,7 @@ const router = express.Router()
 
 router.post('/create-admin', validateRequest(UserValidation.userValidationSchema) ,userController.createUser);
 router.get('/', userController.getUser);
-router.get('/:id', userController.getSingleUser);
+router.get('/:email', userController.getSingleUser);
 router.patch('/:id', validateRequest(UserValidation.updateUserValidationSchema) ,userController.updateUser);
 router.patch('/:id',  validateRequest(UserValidation.updateUserValidationSchema) ,userController.blockUser);
 router.get('/email/:email',  userController.getUserByEmail)

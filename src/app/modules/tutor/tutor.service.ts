@@ -4,22 +4,29 @@ import AppError from '../../error/AppError';
 import { User } from '../user/user.model';
 import { tutorSearchableFields } from './tutor.constants';
 import { ITutor } from './tutor.interface'
-import { Tutor } from './tutor.model'
+import { Tutor } from './tutor.model' 
+
 
 const createTutorProfileIntoDb = async (payload: ITutor) => {
   // console.log(payload);
 
 //  const user = await User.findOne({email:payload.email})
 const user= await User.findById(payload.user)
+// console.log(user);
 // console.log(user?.email)
+const tutor = await Tutor.findOne({email: payload.email})
 
+if (tutor){
+  throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'Tutor Already Created')
+}
 if (user?.email !== payload.email){
   throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'This is not a valid email')
 }
 
   
-  const tutor = await Tutor.create(payload)
-  return tutor
+// console.log(payload);
+  const result = await Tutor.create(payload)
+  return result
 }
 
 //  const getAllTutorFromDB = async () => {
@@ -37,16 +44,32 @@ export const getAllTutorFromDB = async (filters: Record<string, unknown>) => {
     .fields();
 
   const tutors = await queryBuilder.modelQuery;
+  console.log(JSON.stringify(tutors, null, 2));
   return tutors;
 };
 
 
  const getSingleTutorFromDb = async (id: string) => {
-  return Tutor.findById(id).populate('user')
+  // console.log(id);
+  // const objId = isValidObjectId(id)
+
+  const tutor = await Tutor.findById(id)
+  // console.log(tutor);
+return tutor
+}
+ const getSingleTutorByTutorIdFromDb = async (id: string) => {
+  // console.log(id);
+  // const objId = isValidObjectId(id)
+
+  const tutor = await Tutor.find({tutorId: id})
+  console.log(tutor);
+return tutor
 }
 
 const updateTutorIntoDb = async (id: string, payload: Partial<ITutor>) => {
-  return await Tutor.findByIdAndUpdate(id, payload, { new: true });
+const result =   await Tutor.findOneAndUpdate({user:id}, payload, { new: true });
+console.log(result);
+  return result
 };
 
 const deleteTutorFromDb = async (id: string) => {
@@ -55,6 +78,7 @@ const deleteTutorFromDb = async (id: string) => {
 
 export const tutorService = {
     createTutorProfileIntoDb,
+    getSingleTutorByTutorIdFromDb,
     getAllTutorFromDB,
     getSingleTutorFromDb,
     updateTutorIntoDb,

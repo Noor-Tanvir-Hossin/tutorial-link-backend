@@ -6,8 +6,8 @@ const orderSchema = new Schema<TOrder>(
     student: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     tutor: {
       type: Schema.Types.ObjectId,
-      ref: 'Tutor', 
-      required: true, 
+      ref: 'Tutor',
+      required: true,
     },
     selectedMonths: {
       type: Number,
@@ -21,8 +21,8 @@ const orderSchema = new Schema<TOrder>(
     },
 
     totalPrice: { type: Number, min: 0 },
-    totalRevenue: { type: Number,min:0 },
-    totalHours: { type: Number,min:0 },
+    totalRevenue: { type: Number, min: 0 },
+    totalHours: { type: Number, min: 0 },
     status: {
       type: String,
       enum: ['Pending', 'Paid', 'Cancelled'],

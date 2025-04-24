@@ -1,27 +1,36 @@
-import { Schema, model } from "mongoose"
-import { ITutor } from "./tutor.interface"
+import mongoose, { Schema, model } from "mongoose";
+import { ITutor } from "./tutor.interface";
 
-const availabilitySchema = new Schema({
-  day: {
-    type: String,
-    enum: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    required: true,
+// Sub-schema for availability
+const availabilitySchema = new Schema(
+  {
+    day: {
+      type: String,
+      enum: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      required: true,
+    },
+    startTime: { type: String, required: true },
+    endTime: { type: String, required: true },
   },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true },
-});
+  { _id: false }
+);
 
-
-const tutorSchema = new Schema<ITutor>({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+// Main Tutor schema
+const tutorSchema = new Schema<ITutor>(
+  {
+    user: { type: String, required: true },
     bio: { type: String },
     email: { type: String, required: true },
-    subjects: [{ type: Schema.Types.ObjectId, ref: 'Subject' }],
-    hourlyRate: { type: Number,required:true },
-    totalEarnings: { type: Number,default:0 },
+    subjects: [{ type: String }], // plain strings like "Math", "English"
+    hourlyRate: { type: Number, required: true },
+    totalEarnings: { type: Number, default: 0 },
     availability: [availabilitySchema],
     ratings: { type: Number, default: 0 },
-    location:{type: String, required:true}
-  })
-  
-  export const Tutor = model<ITutor>('Tutor', tutorSchema)
+    location: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const Tutor = model<ITutor>('Tutor', tutorSchema);

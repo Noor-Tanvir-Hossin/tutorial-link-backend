@@ -13,8 +13,8 @@ const createStudentIntoDB = async (payload: Tuser): Promise<Tuser> => {
     return result
   }
   
-  const getSingleUserFromDB = async (id: string) => {
-    const result = await User.findById(id)
+  const getSingleUserFromDB = async (email: string) => {
+    const result = await User.findOne({email: email})
     return result
   }
 

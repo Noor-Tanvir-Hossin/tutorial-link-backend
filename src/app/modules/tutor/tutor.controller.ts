@@ -1,4 +1,4 @@
-import e, { Request, Response } from 'express'
+import  { Request, Response } from 'express'
 import { tutorService } from './tutor.service'
 import catchAsync from '../../utils/cathchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -7,6 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 
 const createTutorProfile = catchAsync(async (req, res) => {
     const payload = req.body;
+    // console.log(payload);
   
     const result = await tutorService.createTutorProfileIntoDb(payload);
   
@@ -30,6 +31,16 @@ const getAllTutor = catchAsync(async (req, res) => {
 const getSingleTutor = catchAsync(async (req, res) => {
     const userId = req.params.id
   const result = await tutorService.getSingleTutorFromDb(userId)
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: 'Tutor retreived  succesfully',
+      data: result,
+    });
+  });
+const getSingleTutorByTutorId = catchAsync(async (req, res) => {
+    const userId = req.params.id
+  const result = await tutorService.getSingleTutorByTutorIdFromDb(userId)
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
@@ -67,6 +78,7 @@ const getSingleTutor = catchAsync(async (req, res) => {
 
 export const tutorControlller = {
     createTutorProfile,
+    getSingleTutorByTutorId,
     getAllTutor,
     getSingleTutor,
     updateTutor,
