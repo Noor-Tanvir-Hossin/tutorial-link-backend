@@ -2,53 +2,47 @@ import { StatusCodes } from 'http-status-codes';
 import AppError from '../../error/AppError';
 import { Order } from './order.model';
 // import { Book } from '../book/book.model';
-import { Tuser } from '../user/user.interface';
+
 import { orderUtils } from './order.utils';
 import { Tutor } from '../tutor/tutor.model';
 import { TOrder } from './order.interface';
-
-
+import { JwtPayload } from 'jsonwebtoken';
 
 export const createOrderIntoDB = async (
-  user: Tuser,
+  user: JwtPayload,
   payload: TOrder,
   client_ip: string,
 ) => {
-  
-  
-
-  const tutors = await Tutor.findById(payload.tutor);
+  const tutors = await Tutor.findOne({ user: payload?.tutor });
   // console.log(tutors?.availability.length)
-  const daysInAWeek=tutors?.availability.length
-    if (!tutors) {
-      throw new Error("Tutor not found");
-    }
 
-    const { selectedMonths, selectedHours, student,tutor } = payload;
+  const daysInAWeek = tutors?.availability.length;
+  if (!tutors) {
+    throw new Error('Tutor not found');
+  }
 
-    if (!tutor || !student || !selectedHours || !selectedMonths) {
-      throw new AppError(StatusCodes.BAD_REQUEST, 'Missing required fields: tutorId, studentId, selectedHours, selectedMonths');
-      
-    }
-  
+  const { selectedMonths, selectedHours, student, tutor } = payload;
 
-    const totalHours = selectedHours * 4 * selectedMonths*daysInAWeek!;
+  if (!tutor || !student || !selectedHours || !selectedMonths) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      'Missing required fields: tutorId, studentId, selectedHours, selectedMonths',
+    );
+  }
 
-    // calculating total prices for the student
-    const totalPrices = tutors.hourlyRate * totalHours;
+  const totalHours = selectedHours * 4 * selectedMonths * daysInAWeek!;
 
+  // calculating total prices for the student
+  const totalPrices = tutors.hourlyRate * totalHours;
 
   let order = await Order.create({
     student,
     tutor,
-    totalPrice:totalPrices,
+    totalPrice: totalPrices,
     totalHours,
     selectedMonths,
     selectedHours,
-    
   });
-
- 
 
   const shurjopayPayload = {
     amount: totalPrices,
@@ -120,8 +114,6 @@ const verifyPayment = async (order_id: string) => {
   return verifiedPayment;
 };
 
-
-
 const deleteOrderFromDB = async (id: string) => {
   const order = await Order.findById(id);
   if (!order) {
@@ -131,13 +123,11 @@ const deleteOrderFromDB = async (id: string) => {
   return result;
 };
 
-
-
-const updateOrderStatusFromDB= async (orderId: string) => {
+const updateOrderStatusFromDB = async (orderId: string) => {
   // Find the order by ID
   const order = await Order.findById(orderId);
   if (!order) {
-    throw new Error("Order not found");
+    throw new Error('Order not found');
   }
 
   // Calculate total revenue for the tutor (could be the same as the total price or include fees)
@@ -151,12 +141,11 @@ const updateOrderStatusFromDB= async (orderId: string) => {
   }
 
   // Update the order to mark it as paid
-  order.status = "Paid";
+  order.status = 'Paid';
   await order.save();
 
   return order;
-}
-
+};
 
 const getOrdersByStudentEmailFromDb = async (email: string) => {
   const orders = await Order.find()
@@ -168,7 +157,7 @@ const getOrdersByStudentEmailFromDb = async (email: string) => {
     .exec();
 
   // Filter out nulls (populate didn't match)
-  const filteredOrders = orders.filter(order => order.student !== null);
+  const filteredOrders = orders.filter((order) => order.student !== null);
 
   return filteredOrders;
 };
@@ -183,14 +172,10 @@ export const getOrdersByTutorEmailFromDb = async (email: string) => {
     .exec();
 
   // Filter out nulls
-  const filteredOrders = orders.filter(order => order.tutor !== null);
+  const filteredOrders = orders.filter((order) => order.tutor !== null);
 
   return filteredOrders;
 };
-
-
-
-
 
 export const orderService = {
   createOrderIntoDB,
@@ -200,5 +185,5 @@ export const orderService = {
   updateOrderStatusFromDB,
   getOrdersByStudentEmailFromDb,
   getSingleOrderFromDB,
-  getOrdersByTutorEmailFromDb
+  getOrdersByTutorEmailFromDb,
 };

@@ -29,8 +29,9 @@ const getUser= catchAsync(async(req,res) =>{
 })
 const getSingleUser= catchAsync(async(req,res) =>{
 
-  const {id}= req.params
-  const result = await userService.getSingleUserFromDB(id)
+  const {email}= req.params
+  // console.log(email);
+  const result = await userService.getSingleUserFromDB(email)
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

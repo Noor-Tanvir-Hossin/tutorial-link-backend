@@ -21,7 +21,7 @@ const userSchema = new Schema<Tuser>({
     },
     image:{
         type:String,
-        required:true
+        required:false
     },
     passwordChangeAt: {
         type: Date,
