@@ -15,7 +15,8 @@ export interface IAvailabilitySlot {
 }
 
 export interface ITutor {
-  user: string
+  user: string;
+  name:string;
   bio: string;
   image?: string;
   subjects: mongoose.Types.ObjectId[];

@@ -27,8 +27,9 @@ const availabilitySchema = new Schema(
 const tutorSchema = new Schema<ITutor>(
   {
     user: { type: String, required: true },
+    name:{type:String},
     bio: { type: String },
-    image: { iamge: String },
+    image: { type: String },
     email: { type: String, required: true },
     subjects: [{ type: String }], // plain strings like "Math", "English"
     hourlyRate: { type: Number, required: true },
