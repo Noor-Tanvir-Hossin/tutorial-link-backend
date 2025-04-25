@@ -8,5 +8,5 @@ export interface IBooking {
     startTime: string;
     endTime: string;
   };
-  status?: 'confirmed' | 'pending' | 'cancelled' | 'accepted' | 'rejected'|'paid';
+  status?: 'confirmed' | 'pending' | 'cancelled' | 'accepted' | 'rejected'|'Paid'|"Failed";
 }

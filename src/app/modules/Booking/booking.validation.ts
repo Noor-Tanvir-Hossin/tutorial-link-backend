@@ -11,7 +11,7 @@ export const BookingValidationSchema = z.object({
       startTime: z.string().min(1),
       endTime: z.string().min(1),
     }),
-    status: z.enum(["confirmed", "pending", "cancelled"]).optional(),
+    status: z.enum(['confirmed', 'pending', 'cancelled' ,'accepted' , 'rejected','Paid', "Failed"]).optional(),
   }),
 });
 

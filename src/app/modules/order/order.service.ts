@@ -7,12 +7,14 @@ import { orderUtils } from './order.utils';
 import { Tutor } from '../tutor/tutor.model';
 import { TOrder } from './order.interface';
 import { JwtPayload } from 'jsonwebtoken';
+import { Booking } from '../Booking/booking.model';
 
 export const createOrderIntoDB = async (
   user: JwtPayload,
   payload: TOrder,
   client_ip: string,
 ) => {
+ 
   const tutors = await Tutor.findOne({ user: payload?.tutor });
   // console.log(tutors?.availability.length)
 
@@ -21,7 +23,7 @@ export const createOrderIntoDB = async (
     throw new Error('Tutor not found');
   }
 
-  const { selectedMonths, selectedHours, student, tutor } = payload;
+  const { selectedMonths, selectedHours, student, tutor, bookingId } = payload;
 
   if (!tutor || !student || !selectedHours || !selectedMonths) {
     throw new AppError(
@@ -36,6 +38,7 @@ export const createOrderIntoDB = async (
   const totalPrices = tutors.hourlyRate * totalHours;
 
   let order = await Order.create({
+    bookingId,
     student,
     tutor,
     totalPrice: totalPrices,
@@ -110,7 +113,14 @@ const verifyPayment = async (order_id: string) => {
       },
     );
   }
-
+  if(verifiedPayment.length){
+    const order =await Order.findOne({ 'transaction.id': order_id,})
+    console.log(order);
+    if(order?.status){
+      await Booking.findByIdAndUpdate(order?.bookingId, {status: order?.status})
+    }
+  }
+  // console.log(verifiedPayment);
   return verifiedPayment;
 };
 

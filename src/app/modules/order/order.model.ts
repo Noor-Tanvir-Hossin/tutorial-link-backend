@@ -9,6 +9,7 @@ const orderSchema = new Schema<TOrder>(
       ref: 'Tutor',
       required: true,
     },
+    bookingId: {type: String,  required: true },
     selectedMonths: {
       type: Number,
       required: true,
