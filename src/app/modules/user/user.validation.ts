@@ -5,6 +5,8 @@ const userValidationSchema = z.object({
     name: z.string({
         required_error: "Name must be provided and must be a string",
     }).min(3).max(50),
+    image: z.string(),
+    isComplete: z.boolean().optional(),
 
     email: z.string({
         required_error: "Email must be provided and must be a string",

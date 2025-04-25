@@ -29,6 +29,7 @@ const getBookingByTutorId = catchAsync(async (req, res) => {
   });
 });
 const getBookingByStudentId = catchAsync(async (req, res) => {
+ 
   const { studentId } = req.params;
 
   const result = await bookingService.getBookingByStudentId(studentId);

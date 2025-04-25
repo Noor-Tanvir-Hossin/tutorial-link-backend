@@ -11,21 +11,26 @@ const createTutorProfileIntoDb = async (payload: ITutor) => {
   // console.log(payload);
 
 //  const user = await User.findOne({email:payload.email})
-const user= await User.findById(payload.user)
-// console.log(user);
-// console.log(user?.email)
-const tutor = await Tutor.findOne({email: payload.email})
+// const user= await User.findById(payload.user)
 
-if (tutor){
-  throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'Tutor Already Created')
-}
-if (user?.email !== payload.email){
-  throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'This is not a valid email')
-}
+
+// const tutor = await Tutor.findOne({email: payload.email})
+
+// if (tutor){
+//   throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'Tutor Already Created')
+// }
+// if (user?.email !== payload.email){
+//   throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'This is not a valid email')
+// }
 
   
 // console.log(payload);
   const result = await Tutor.create(payload)
+  if(result){
+    console.log(payload);
+    const updateUser  = await User.findByIdAndUpdate(payload?.user, {isComplete: true, image: payload?.image })
+    console.log(updateUser);
+  }
   return result
 }
 
@@ -60,9 +65,9 @@ return tutor
  const getSingleTutorByTutorIdFromDb = async (id: string) => {
   // console.log(id);
   // const objId = isValidObjectId(id)
-
-  const tutor = await Tutor.find({tutorId: id})
-  console.log(tutor);
+console.log(id);
+  const tutor = await Tutor.findOne({user: id})
+  // console.log(tutor);
 return tutor
 }
 

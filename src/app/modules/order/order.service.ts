@@ -183,9 +183,12 @@ export const getOrdersByTutorEmailFromDb = async (email: string) => {
 
   // Filter out nulls
   const filteredOrders = orders.filter((order) => order.tutor !== null);
+  
 
   return filteredOrders;
 };
+
+
 
 export const orderService = {
   createOrderIntoDB,

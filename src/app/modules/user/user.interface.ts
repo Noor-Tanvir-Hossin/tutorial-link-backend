@@ -7,6 +7,7 @@ const userSchema = new Schema<Tuser>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     image: { type: String },
+    isComplete: { type: Boolean },
     role: { type: String, enum: ['student', 'tutor'], required: true },
     passwordChangeAt: { type: Date, required: true },
   },
