@@ -1,8 +1,11 @@
+
 import mongoose from 'mongoose';
 
 export type TOrder = {
   student: mongoose.Types.ObjectId;
   tutor: mongoose.Types.ObjectId;
+  bookingId: string;
+  
   transaction: {
     id: string;
     transactionStatus: string;

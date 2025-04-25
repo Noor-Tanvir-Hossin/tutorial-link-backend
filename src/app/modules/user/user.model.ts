@@ -9,6 +9,11 @@ const userSchema = new Schema<Tuser>({
         type: String,
         required: true,       
     },
+    isComplete: {
+        type: Boolean,
+        required: true,   
+        default: false    
+    },
     email: {
         type: String,
         required: true,
