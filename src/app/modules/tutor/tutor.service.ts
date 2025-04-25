@@ -7,36 +7,60 @@ import { ITutor } from './tutor.interface'
 import { Tutor } from './tutor.model' 
 
 
+// const createTutorProfileIntoDb = async (payload: ITutor) => {
+//   // console.log(payload);
+
+// //  const user = await User.findOne({email:payload.email})
+// // const user= await User.findById(payload.user)
+
+
+// // const tutor = await Tutor.findOne({email: payload.email})
+
+// // if (tutor){
+// //   throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'Tutor Already Created')
+// // }
+// // if (user?.email !== payload.email){
+// //   throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'This is not a valid email')
+// // }
+
+  
+// // console.log(payload);
+//   const result = await Tutor.create(payload)
+//   if(result){
+//     console.log(payload);
+//     const updateUser  = await User.findByIdAndUpdate(payload?.user, {isComplete: true, image: payload?.image })
+//     console.log(updateUser);
+//   }
+//   return result
+// }
 const createTutorProfileIntoDb = async (payload: ITutor) => {
   // console.log(payload);
 
-//  const user = await User.findOne({email:payload.email})
-// const user= await User.findById(payload.user)
+  // const user = await User.findOne({ email: payload.email });
+  const user= await User.findById(payload.user)
 
+  const tutor = await Tutor.findOne({ email: payload.email });
 
-// const tutor = await Tutor.findOne({email: payload.email})
+  if (tutor) {
+    throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'Tutor Already Created');
+  }
+  if (user?.email !== payload.email) {
+    throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'This is not a valid email');
+  }
 
-// if (tutor){
-//   throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'Tutor Already Created')
-// }
-// if (user?.email !== payload.email){
-//   throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'This is not a valid email')
-// }
-
-  
-// console.log(payload);
-  const result = await Tutor.create(payload)
-  if(result){
+  // console.log(payload);
+  const result = await Tutor.create(payload);
+  if (result) {
     console.log(payload);
-    const updateUser  = await User.findByIdAndUpdate(payload?.user, {isComplete: true, image: payload?.image })
+    const updateUser = await User.findByIdAndUpdate(payload?.user, {
+      isComplete: true,
+      image: payload?.image,
+    });
     console.log(updateUser);
   }
-  return result
-}
+  return result;
+};
 
-//  const getAllTutorFromDB = async () => {
-//   return Tutor.find().populate('user').populate('subjects')
-// }
 
 export const getAllTutorFromDB = async (filters: Record<string, unknown>) => {
   const tutorsQuery = Tutor.find().populate('user').populate('subjects');

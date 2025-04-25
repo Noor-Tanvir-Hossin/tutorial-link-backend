@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import mongoose, { Types } from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface IAvailabilitySlot {
   day:

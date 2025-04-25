@@ -1,6 +1,5 @@
 import { Review } from './review.model';
 import { Tutor } from '../tutor/tutor.model';
-import { User } from '../user/user.model';
 import {Types,} from 'mongoose';
 
 export const createReviewIntoDb = async (data: any) => {

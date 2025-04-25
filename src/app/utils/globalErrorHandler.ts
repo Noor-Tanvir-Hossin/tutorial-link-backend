@@ -70,7 +70,7 @@ import config from '../config';
 //     });
 //   };
 
-const globalErrorHandler: ErrorRequestHandler = (err, req, res, next): void => {
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, _next): void => {
   let statusCode = 500;
   let message = 'Something went wrong!';
   let errorSources: TErrorSources = [

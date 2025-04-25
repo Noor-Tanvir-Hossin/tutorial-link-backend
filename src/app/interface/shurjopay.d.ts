@@ -99,7 +99,7 @@ declare module "shurjopay" {
     }
   
     type Callback<T> = (response: T) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     type ErrorHandler = (error: any) => void;
   
     class Shurjopay {

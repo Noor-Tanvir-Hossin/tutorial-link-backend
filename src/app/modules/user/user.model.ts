@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { Tuser } from "./user.interface";
 import config from "../../config";
 import bcrypt from 'bcrypt';
+import { Tuser } from "./user.interface";
 
 
 const userSchema = new Schema<Tuser>({

@@ -1,19 +1,17 @@
-import { Schema, model } from 'mongoose';
-import { Tuser } from './user.interface';
+import { USER_ROLE } from './user.constant';
 
-const userSchema = new Schema<Tuser>(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    image: { type: String },
-    isComplete: { type: Boolean },
-    role: { type: String, enum: ['student', 'tutor'], required: true },
-    passwordChangeAt: { type: Date, required: true },
-  },
-  {
-    timestamps: true,
-  }
-);
 
-export const User = model<Tuser>('user', userSchema);
+export type UserRole = 'student' | 'tutor'
+
+export interface Tuser {
+  name: string;
+  isComplete:boolean;
+  email: string;
+  password: string;
+  image:string;
+  role: UserRole;
+  passwordChangeAt: Date;
+}
+
+
+export type TUserRole = keyof typeof USER_ROLE;

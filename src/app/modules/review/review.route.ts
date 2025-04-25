@@ -1,6 +1,5 @@
 import express from 'express'
-import auth from "../../middleware/auth"
-import { USER_ROLE } from "../user/user.constant"
+
 import { reviewController } from "./review.controller"
 
 const router = express.Router()
