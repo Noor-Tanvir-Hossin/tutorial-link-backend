@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import { optional, z } from 'zod';
 
 const userValidationSchema = z.object({
    body: z.object({
     name: z.string({
         required_error: "Name must be provided and must be a string",
     }).min(3).max(50),
-    image: z.string(),
+    image: z.string().optional(),
     isComplete: z.boolean().optional(),
 
     email: z.string({

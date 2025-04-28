@@ -8,7 +8,7 @@ export interface Tuser {
   isComplete:boolean;
   email: string;
   password: string;
-  image:string;
+  image?:string;
   role: UserRole;
   passwordChangeAt: Date;
 }
